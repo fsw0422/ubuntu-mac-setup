@@ -8,12 +8,15 @@
 		// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
 		"dockerfile": "../Dockerfile"
 	},
+	"mounts": [
+		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/ubuntu/.ssh,readonly",
+	],
 	"shutdownAction": "stopContainer",
 	"runArgs": [
 		"--rm"
 	],
 	"features": {
-		"ghcr.io/devcontainers/features/git:1": {}
+		"ghcr.io/devcontainers/features/common-utils:1": {}
 	},
 	"remoteUser": "ubuntu",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ubuntu,type=bind",
