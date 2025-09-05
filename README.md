@@ -1,3 +1,3 @@
-# Ubuntu setup script
+# Ubuntu / Mac env setup script
 
-Contains script to install custom environment in Ubuntu
+Contains script to install custom environment in Ubuntu / Mac
