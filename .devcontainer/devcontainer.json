@@ -12,7 +12,18 @@
 	"runArgs": [
 		"--rm"
 	],
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
 	"remoteUser": "ubuntu",
     "workspaceMount": "source=${localWorkspaceFolder},target=/home/ubuntu,type=bind",
-    "workspaceFolder": "/home/ubuntu"
+	"workspaceFolder": "/home/ubuntu",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-containers",
+				"docker.docker"
+			]
+		}
+	}
 }
