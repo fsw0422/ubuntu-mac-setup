@@ -9,7 +9,7 @@
 		"dockerfile": "../Dockerfile"
 	},
 	"mounts": [
-		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/ubuntu/.ssh,readonly",
+		"type=bind,source=${localEnv:HOME}/.ssh,target=/home/ubuntu/.ssh,readonly"
 	],
 	"shutdownAction": "stopContainer",
 	"runArgs": [
@@ -19,7 +19,7 @@
 		"ghcr.io/devcontainers/features/common-utils:1": {}
 	},
 	"remoteUser": "ubuntu",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/ubuntu,type=bind",
+    "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/ubuntu",
 	"workspaceFolder": "/home/ubuntu",
 	"customizations": {
 		"vscode": {

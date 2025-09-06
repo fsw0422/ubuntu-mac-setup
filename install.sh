@@ -3,7 +3,7 @@
 echo "Installing Dependencies"
 if [[ "$OSTYPE" == "darwin"* ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-                brew install \
+        brew install \
                 coreutils \
                 findutils \
                 gnu-tar \
@@ -143,7 +143,7 @@ else
         rm -f ~/.ideavimrc && ln -s ~/.ksp/.ideavimrc ~/
 fi
 rm -f ~/.vimrc && ln -s ~/.ksp/.vimrc ~/
-rm -f ~/.ssh/config && ln -s ~/.ksp/ssh_config ~/.ssh/config
+rm -f ~/.ssh/config && ln ~/.ksp/ssh_config ~/.ssh/config
 rm -f ~/.sdkman/etc/config && ln -s ~/.ksp/sdkman_config ~/.sdkman/etc/config
 
 

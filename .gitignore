@@ -1,6 +1,7 @@
 .docker/
 .dotnet/
 .cache/
+.config/
 .gnupg/
 .oh-my-zsh/
 .vscode-server/
