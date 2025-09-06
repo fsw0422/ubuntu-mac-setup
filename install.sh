@@ -133,18 +133,18 @@ read response
 
 echo "Installing configs..."
 git clone https://github.com/fsw0422/.ksp.git
-rm -f ~/.tmux.conf && ln -s ~/.ksp/.tmux.conf ~/
-rm -f ~/.p10k.zsh && ln -s ~/.ksp/.p10k.zsh ~/
-rm -f ~/.zshrc && ln -s ~/.ksp/.zshrc ~/
+rm -f ~/.tmux.conf && ln ~/.ksp/.tmux.conf ~/
+rm -f ~/.p10k.zsh && ln ~/.ksp/.p10k.zsh ~/
+rm -f ~/.zshrc && ln ~/.ksp/.zshrc ~/
 if [ -d "/run/WSL" ]; then
         WIN_HOME=$(wslpath "$(powershell.exe -Command '$env:USERPROFILE')" | tr -d '\r')
         rm -f "$WIN_HOME/.ideavimrc" && cp ~/.ksp/.ideavimrc $WIN_HOME
 else
         rm -f ~/.ideavimrc && ln -s ~/.ksp/.ideavimrc ~/
 fi
-rm -f ~/.vimrc && ln -s ~/.ksp/.vimrc ~/
+rm -f ~/.vimrc && ln ~/.ksp/.vimrc ~/
 rm -f ~/.ssh/config && ln ~/.ksp/ssh_config ~/.ssh/config
-rm -f ~/.sdkman/etc/config && ln -s ~/.ksp/sdkman_config ~/.sdkman/etc/config
+rm -f ~/.sdkman/etc/config && ln ~/.ksp/sdkman_config ~/.sdkman/etc/config
 
 
 echo "********** Installation Complete **********"
