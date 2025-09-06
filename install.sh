@@ -3,8 +3,7 @@
 echo "Installing Dependencies"
 if [[ "$OSTYPE" == "darwin"* ]]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install --cask alt-tab
-        brew install \
+                brew install \
                 coreutils \
                 findutils \
                 gnu-tar \
@@ -23,11 +22,14 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 else
         sudo apt update
         sudo DEBIAN_FRONTEND=noninteractive apt install -y \
+                locales \
                 tzdata \
                 git \
                 xclip \
                 curl \
                 wget \
+                gpg \
+                apt-transport-https \
                 gnupg \
                 vim-gtk3 \
                 build-essential \
@@ -74,8 +76,6 @@ echo "Setting up Locale to 'en_US.UTF-8'"
 if [[ "$OSTYPE" == "darwin"* ]]; then
         echo "MacOS does not need Locale configuration"
 else
-        sudo apt update
-        sudo apt install -y locales
         sudo sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
         sudo locale-gen
         sudo update-locale LANG=en_US.UTF-8
@@ -107,7 +107,6 @@ else
         sudo apt-get install -y kubectl
 
         # helm
-        sudo apt-get install curl gpg apt-transport-https --yes
         curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
         echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
         sudo apt-get update
