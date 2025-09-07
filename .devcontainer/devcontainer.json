@@ -17,8 +17,8 @@
 		"ghcr.io/devcontainers/features/common-utils:1": {}
 	},
 	"remoteUser": "ubuntu",
-    "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/ubuntu",
-	"workspaceFolder": "/home/ubuntu",
+    "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/ubuntu/ksp-setup",
+	"workspaceFolder": "/home/ubuntu/ksp-setup",
 	"customizations": {
 		"vscode": {
 			"extensions": [
@@ -26,5 +26,6 @@
 				"docker.docker"
 			]
 		}
-	}
+	},
+	"postCreateCommand": "./cleanup.sh"
 }

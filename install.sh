@@ -132,7 +132,7 @@ read response
 
 
 echo "Installing configs..."
-git clone https://github.com/fsw0422/.ksp.git
+git clone https://github.com/fsw0422/.ksp.git ~/.ksp
 rm -f ~/.tmux.conf && ln ~/.ksp/.tmux.conf ~/
 rm -f ~/.p10k.zsh && ln ~/.ksp/.p10k.zsh ~/
 rm -f ~/.zshrc && ln ~/.ksp/.zshrc ~/
@@ -140,7 +140,7 @@ if [ -d "/run/WSL" ]; then
         WIN_HOME=$(wslpath "$(powershell.exe -Command '$env:USERPROFILE')" | tr -d '\r')
         rm -f "$WIN_HOME/.ideavimrc" && cp ~/.ksp/.ideavimrc $WIN_HOME
 else
-        rm -f ~/.ideavimrc && ln -s ~/.ksp/.ideavimrc ~/
+        rm -f ~/.ideavimrc && ln ~/.ksp/.ideavimrc ~/
 fi
 rm -f ~/.vimrc && ln ~/.ksp/.vimrc ~/
 rm -f ~/.ssh/config && ln ~/.ksp/ssh_config ~/.ssh/config
