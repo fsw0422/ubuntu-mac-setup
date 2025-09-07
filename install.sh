@@ -83,14 +83,28 @@ fi
 
 
 echo "Installing Docker"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "Please Install Docker Desktop. If you have, press any key to continue..."
-        read response
-else
+install_docker() {
         curl -fsSL https://get.docker.com -o get-docker.sh
         chmod +x get-docker.sh
         sudo ./get-docker.sh
         sudo usermod -aG docker $USER
+        rm -f get-docker.sh
+}
+if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "Please Install Docker Desktop. If you have, press any key to continue..."
+        read response
+elif [ -d "/run/WSL" ]; then
+        # Remove existing Docker and metadata which could have potentially been set by 'Docker Desktop' in Windows
+        sudo apt purge -y docker*
+        sudo rm /usr/local/lib/docker/cli-plugins/docker-*
+        rm -rf ~/.docker
+        echo "Please remove 'Docker Desktop' and delete '.docker' in 'C:\Users\{User Name}' directory. If you have, press any key to continue..."
+        read response
+
+        install_docker
+else
+        # Install Docker if using native Linux        
+        install_docker
 fi
 
 
