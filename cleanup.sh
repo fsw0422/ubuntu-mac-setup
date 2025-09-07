@@ -4,9 +4,9 @@ rm -rf $HOME/.docker/
 rm -rf $HOME/.oh-my-zsh/
 rm -rf $HOME/.ksp/
 rm -rf $HOME/.sdkman/
-rm -rf $HOME/.gitconfig
-rm -rf $HOME/.vimrc
-rm -rf $HOME/.zshrc
-rm -rf $HOME/.ideavimrc
-rm -rf $HOME/.tmux.conf
-rm -rf $HOME/.p10k.zsh
+rm -f $HOME/.gitconfig
+rm -f $HOME/.vimrc
+rm -f $HOME/.zshrc
+rm -f $HOME/.ideavimrc
+rm -f $HOME/.tmux.conf
+rm -f $HOME/.p10k.zsh
