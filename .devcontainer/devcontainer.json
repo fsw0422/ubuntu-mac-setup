@@ -7,8 +7,7 @@
 		"dockerfile": "../Dockerfile-dev"
 	},
 	"mounts": [
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/ubuntu/.ssh,type=bind,readonly",
-		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/ubuntu/.gitconfig,type=bind,readonly"
+		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/ubuntu/.ssh,type=bind,readonly"
 	],
 	"shutdownAction": "stopContainer",
 	"runArgs": [
