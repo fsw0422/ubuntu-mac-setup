@@ -135,6 +135,7 @@ read response
 
 echo "Installing configs..."
 git clone https://github.com/fsw0422/.ksp.git ~/.ksp
+rm -f ~/.gitconfig && ln ~/.ksp/.gitconfig ~/
 rm -f ~/.tmux.conf && ln ~/.ksp/.tmux.conf ~/
 rm -f ~/.p10k.zsh && ln ~/.ksp/.p10k.zsh ~/
 rm -f ~/.zshrc && ln ~/.ksp/.zshrc ~/
