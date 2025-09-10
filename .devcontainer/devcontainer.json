@@ -14,7 +14,9 @@
 		"--rm"
 	],
 	"features": {
-		"ghcr.io/devcontainers/features/common-utils:1": {}
+		"ghcr.io/devcontainers/features/common-utils:2": {
+			"configureZshAsDefaultShell": true
+		}
 	},
 	"remoteUser": "ubuntu",
     "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/ubuntu/ksp-setup",
@@ -26,6 +28,5 @@
 				"docker.docker"
 			]
 		}
-	},
-	"postCreateCommand": "./cleanup.sh"
+	}
 }
