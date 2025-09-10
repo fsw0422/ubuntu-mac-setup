@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf $HOME/.docker/
+echo "Cleaning up existing installations"
 rm -rf $HOME/.oh-my-zsh/
 rm -rf $HOME/.ksp/
 rm -rf $HOME/.sdkman/
