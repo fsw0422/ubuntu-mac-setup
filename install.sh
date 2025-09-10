@@ -1,57 +1,66 @@
 #!/bin/bash
 
+LIMITED_INSTALL=false
+while getopts "l" opt; do
+	case $opt in
+		l)
+			LIMITED_INSTALL=true
+			echo "Limited installation mode enabled"
+			;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+			echo "Usage: $0 [-l]"
+			echo "  -l: Run limited installation (only specific parts will be executed)"
+			exit 1
+			;;
+	esac
+done
+
 echo "Installing Dependencies"
 if [[ "$OSTYPE" == "darwin"* ]]; then
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        brew install \
-                coreutils \
-                findutils \
-                gnu-tar \
-                gnu-sed \
-                gawk \
-                gnutls \
-                gnu-indent \
-                gnu-getopt \
-                grep \
-                git \
-                wget \
-                vim \
-                ncurses \
-                libevent \
-                utf8proc
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	brew install \
+		coreutils \
+		findutils \
+		gnu-tar \
+		gnu-sed \
+		gawk \
+		gnutls \
+		gnu-indent \
+		gnu-getopt \
+		grep \
+		git \
+		wget \
+		vim \
+		ncurses \
+		libevent \
+		utf8proc
 else
-        sudo apt update
-        sudo DEBIAN_FRONTEND=noninteractive apt install -y \
-                locales \
-                tzdata \
-                git \
-                xclip \
-                curl \
-                wget \
-                gpg \
-                apt-transport-https \
-                gnupg \
-                vim-gtk3 \
-                build-essential \
-                openssh-client \
-                apt-transport-https \
-                software-properties-common \
-                bison \
-                libncurses5-dev:amd64 \
-                libevent-dev
+	sudo apt update
+	sudo DEBIAN_FRONTEND=noninteractive apt install -y \
+		zsh \
+		locales \
+		tzdata \
+		git \
+		xclip \
+		curl \
+		wget \
+		gpg \
+		apt-transport-https \
+		gnupg \
+		vim-gtk3 \
+		build-essential \
+		openssh-client \
+		apt-transport-https \
+		software-properties-common \
+		bison \
+		libncurses5-dev:amd64 \
+		libevent-dev
 fi
-
-
-echo "Installing ZSH"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install zsh
-else
-        sudo apt install -y zsh
-fi
-sudo chsh -s $(which zsh)
 
 
 echo "Installing Oh-My-ZSH"
+export RUNZSH=no
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -59,65 +68,71 @@ echo "Please download and install all MesloLGS fonts from https://github.com/rom
 read response
 
 
-echo "Installing tmux 3.5"
-rm -f tmux-3.5.tar.gz && rm -rf tmux-3.5
-wget https://github.com/tmux/tmux/releases/download/3.5/tmux-3.5.tar.gz -O tmux-3.5.tar.gz
-tar zxvf tmux-3.5.tar.gz
-if [[ "$OSTYPE" == "darwin"* ]]; then
-        (cd tmux-3.5 && ./configure --enable-utf8proc && make && sudo make install)
-else
-        (cd tmux-3.5 && ./configure && make && sudo make install)
+if [ "$LIMITED_INSTALL" = false ]; then
+	echo "Installing tmux 3.5"
+	rm -f tmux-3.5.tar.gz && rm -rf tmux-3.5
+	wget https://github.com/tmux/tmux/releases/download/3.5/tmux-3.5.tar.gz -O tmux-3.5.tar.gz
+	tar zxvf tmux-3.5.tar.gz
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		(cd tmux-3.5 && ./configure --enable-utf8proc && make && sudo make install)
+	else
+		(cd tmux-3.5 && ./configure && make && sudo make install)
+	fi
+	tmux kill-server
+	rm -f tmux-3.5.tar.gz && rm -rf tmux-3.5
 fi
-tmux kill-server
-rm -f tmux-3.5.tar.gz && rm -rf tmux-3.5
 
 
 echo "Setting up Locale to 'en_US.UTF-8'"
 if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "MacOS does not need Locale configuration"
+	echo "MacOS does not need Locale configuration"
 else
-        sudo sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-        sudo locale-gen
-        sudo update-locale LANG=en_US.UTF-8
+	sudo sed -i 's/^# *en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
+	sudo locale-gen
+	sudo update-locale LANG=en_US.UTF-8
 fi
 
 
-echo "Installing Docker"
-if [[ "$OSTYPE" == "darwin"* ]] || [ -d "/run/WSL" ]; then
-        echo "Please Install Docker Desktop. If you have, press any key to continue..."
-        read response
-else
-        # Install Docker if using native Linux        
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        chmod +x get-docker.sh
-        sudo ./get-docker.sh
-        sudo usermod -aG docker $USER
-        rm -f get-docker.sh
+if [ "$LIMITED_INSTALL" = false ]; then
+	echo "Installing Docker"
+	if [[ "$OSTYPE" == "darwin"* ]] || [ -d "/run/WSL" ]; then
+		echo "Please Install Docker Desktop. If you have, press any key to continue..."
+		read response
+	else
+		# Install Docker if using native Linux
+		curl -fsSL https://get.docker.com -o get-docker.sh
+		chmod +x get-docker.sh
+		sudo ./get-docker.sh
+		sudo usermod -aG docker $USER
+		rm -f get-docker.sh
+    fi
 fi
 
 
-echo "Installing Kubernetes Tools"
-if [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install kubectl helm k9s
-else
-        # kubectl
-        curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-        sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-        echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-        sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list
-        sudo apt-get update
-        sudo apt-get install -y kubectl
+if [ "$LIMITED_INSTALL" = false ]; then
+	echo "Installing Kubernetes Tools"
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		brew install kubectl helm k9s
+	else
+		# kubectl
+		curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+		sudo chmod 644 /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+		echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+		sudo chmod 644 /etc/apt/sources.list.d/kubernetes.list
+		sudo apt-get update
+		sudo apt-get install -y kubectl
 
-        # helm
-        curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-        echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-        sudo apt-get update
-        sudo apt-get install helm
+		# helm
+		curl -fsSL https://packages.buildkite.com/helm-linux/helm-debian/gpgkey | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
+		echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://packages.buildkite.com/helm-linux/helm-debian/any/ any main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+		sudo apt-get update
+		sudo apt-get install helm
 
-        # k9s
-        wget https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb
-        sudo apt install ./k9s_linux_amd64.deb
-        sudo rm k9s_linux_amd64.deb
+		# k9s
+		wget https://github.com/derailed/k9s/releases/latest/download/k9s_linux_amd64.deb
+		sudo apt install ./k9s_linux_amd64.deb
+		sudo rm k9s_linux_amd64.deb
+	fi
 fi
 
 
@@ -127,10 +142,12 @@ echo "Have you regiestered the generated key to Github? If you have, press any k
 read response
 
 
-echo "Installing SDKMAN"
-curl -s "https://get.sdkman.io" | bash
-echo "Please install and set a global JDK version. If you have, press any key to continue..."
-read response
+if [ "$LIMITED_INSTALL" = false ]; then
+	echo "Installing SDKMAN"
+	curl -s "https://get.sdkman.io" | bash
+	echo "Please install and set a global JDK version. If you have, press any key to continue..."
+	read response
+fi
 
 
 echo "Installing configs..."
@@ -142,11 +159,15 @@ rm -f ~/.zshrc && ln ~/.ksp/.zshrc ~/
 rm -f ~/.ideavimrc && ln ~/.ksp/.ideavimrc ~/
 rm -f ~/.vimrc && ln ~/.ksp/.vimrc ~/
 rm -f ~/.ssh/config && ln ~/.ksp/ssh_config ~/.ssh/config
-rm -f ~/.sdkman/etc/config && ln ~/.ksp/sdkman_config ~/.sdkman/etc/config
+if [ "$LIMITED_INSTALL" = false ]; then
+	rm -f ~/.sdkman/etc/config && ln ~/.ksp/sdkman_config ~/.sdkman/etc/config
+fi
 
 
 echo "********** Installation Complete **********"
 echo "Please proceed to OneDrive README file and finish platform-specific settings"
-echo "Press any key to start a new Tmux session"
-read response
-tmux
+if [ "$LIMITED_INSTALL" = false ]; then
+	echo "Press any key to start a new Tmux session"
+	read response
+	tmux
+fi
